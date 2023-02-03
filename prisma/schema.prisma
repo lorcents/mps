@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model StkRes {
+  id                  Int    @id @default(autoincrement())
+  merchantRequestID   String
+  checkoutRequestID   String @unique
+  responseDescription String
+  customerMessage     String
+
+  CallbackRes CallbackRes?
+}
+
+model CallbackRes {
+  id                Int    @id @default(autoincrement())
+  stkRes            StkRes @relation(fields: [checkoutRequestID], references: [checkoutRequestID])
+  checkoutRequestID String @unique
+  resultCode       Int
+  resultDesc       String
+  mpesaReceiptNumber String?
+  amount   Int?
+  phoneNumber String?
+  transactionDate String?
+  
+
+
+
+}
