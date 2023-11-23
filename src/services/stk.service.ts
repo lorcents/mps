@@ -19,6 +19,8 @@ interface queryData {}
 
 export abstract class StkService {
   static async pushStk(data: stkData): Promise<any> {
+    if (!data.phoneNumber || data.phoneNumber.length !== 10) throw new Error("Please provide a valid phone Number")
+    if (!data.amount || data.amount<1) throw new Error("Please provide a valid  amount")
     const phoneNumber = data.phoneNumber.substring(1);
     const amount = data.amount;
 
@@ -68,7 +70,7 @@ export abstract class StkService {
     );
 
     if (err) {
-      return err.message;
+      throw new Error(err.message);
     }
 
     let stkres = stkRes?.data;
@@ -85,16 +87,6 @@ export abstract class StkService {
       });
     }
 
-    // const resultRes = await prisma.callbackRes.findUnique({
-    //   where: {
-    //     checkoutRequestID: stkres.CheckoutRequestID,
-    //   },
-    // });
-
-    // if (resultRes === null) {
-    //   return "Failed to get callback data";
-    // }
-    // console.log(resultRes);
 
     return stkres;
   }
@@ -133,8 +125,7 @@ export abstract class StkService {
 
       return response;
     } catch (err: any) {
-      console.log(err);
-      return err.message;
+      throw new Error(err.message);
     }
   }
 }

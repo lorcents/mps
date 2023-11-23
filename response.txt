@@ -30,3 +30,6 @@
 {"MerchantRequestID":"74592-22741622-1","CheckoutRequestID":"ws_CO_16012023100442622740925341","ResultCode":1032,"ResultDesc":"Request cancelled by user"}
 {"MerchantRequestID":"5468-190271984-1","CheckoutRequestID":"ws_CO_17012023191045248740925341","ResultCode":1032,"ResultDesc":"Request cancelled by user"}
 {"MerchantRequestID":"32479-143031393-1","CheckoutRequestID":"ws_CO_19012023093545358111739750","ResultCode":0,"ResultDesc":"The service request is processed successfully.","CallbackMetadata":{"Item":[{"Name":"Amount","Value":1},{"Name":"MpesaReceiptNumber","Value":"RAJ1P205CH"},{"Name":"Balance"},{"Name":"TransactionDate","Value":20230119093558},{"Name":"PhoneNumber","Value":254111739750}]}}
+{"MerchantRequestID":"11026-24465394-1","CheckoutRequestID":"ws_CO_22112023162811754706194797","ResultCode":1037,"ResultDesc":"DS timeout user cannot be reached"}
+{"MerchantRequestID":"11041-26747197-1","CheckoutRequestID":"ws_CO_23112023084551167706194797","ResultCode":1037,"ResultDesc":"DS timeout user cannot be reached"}
+{"MerchantRequestID":"11048-27083257-1","CheckoutRequestID":"ws_CO_23112023104448557740925341","ResultCode":1032,"ResultDesc":"Request cancelled by user"}

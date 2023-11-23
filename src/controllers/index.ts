@@ -1,6 +1,5 @@
 import fs from "fs";
-import axios from "axios";
-import express from "express";
+import express, { NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 
 import { StkService } from "../services/stk.service";
@@ -13,22 +12,34 @@ export const controllers = {
     res.send("Hello there");
   },
 
-  token: async (req: express.Request, res: express.Response) => {
+  token: async (req: express.Request, res: express.Response,next:NextFunction) => {
+    try{
     const result = await AuthSercice.getAuth();
     const token = result;
     res.json(token);
+  }catch(error){
+    next(error)
+  }
   },
-  stkRoute: async (req: express.Request, res: express.Response) => {
+  stkRoute: async (req: express.Request, res: express.Response, next: NextFunction) => {
     const data = req.body;
+    try{
     const stkres = await StkService.pushStk(data);
-
     res.json(stkres);
+    }
+    catch(error){
+      next(error);
+    }
   },
-  queryRoute: async (req: express.Request, res: express.Response) => {
+  queryRoute: async (req: express.Request, res: express.Response,next:NextFunction) => {
     const { CheckoutRequestID } = req.body;
+    try{
     const queryRes = await StkService.queryStk(CheckoutRequestID);
-
     res.json(queryRes);
+    }catch(error){
+    next(error);
+    }
+   
   },
 
   callbackURl: async (req: express.Request, res: express.Response) => {

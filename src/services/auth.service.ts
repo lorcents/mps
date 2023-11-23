@@ -1,5 +1,4 @@
 import axios from "axios";
-import express from "express";
 import { Buffer } from "buffer";
 import { config, url } from "../config/index";
 
@@ -22,7 +21,7 @@ export abstract class AuthSercice {
 
       return token;
     } catch (err: any) {
-      console.log(err.message);
+      throw new Error(err.message);
     }
   }
 }
