@@ -1,44 +1,45 @@
-import * as dotenv from "dotenv";
-dotenv.config();
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import * as dotenv from 'dotenv'
 import express from 'express'
-import bodyParser from "body-parser";
-import ngrok from "ngrok";
-import cors from "cors";
+import bodyParser from 'body-parser'
+import ngrok from 'ngrok'
+import cors from 'cors'
 
-import route from "./routes";
-import { requestLogger,errorLogger,errorResponder,invalidPathHandler } from "./middleware";
+import route from './routes'
+import { requestLogger, errorLogger, errorResponder, invalidPathHandler } from './middleware'
+dotenv.config()
 
-const app = express();
+const app = express()
 
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
-    extended: true,
+    extended: true
   })
-);
+)
 
-app.use(cors());
+app.use(cors())
 
-app.use(requestLogger);
+app.use(requestLogger)
 
-app.use("/", route); 
+app.use('/', route)
 
-app.use(errorLogger);
+app.use(errorLogger)
 
-app.use(errorResponder);
+app.use(errorResponder)
 
-app.use(invalidPathHandler);
+app.use(invalidPathHandler)
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT ? process.env.PORT : 5000
 
-const server = app.listen(port, () => {
-  console.log(`🚀 Server ready at: http://localhost:${port}`);
-});
+app.listen(port, () => {
+  console.log(`🚀 Server ready at: http://localhost:${port}`)
+})
 
-const ngrokfn = async () => {
-  const url = await ngrok.connect(+port);
-  console.log(`🚀 Ngrok ready at ${url}`);
-  return url;
-};
+const ngrokfn = async (): Promise<any> => {
+  const url = await ngrok.connect(+port)
+  console.log(`🚀 Ngrok ready at ${url}`)
+  return url
+}
 
-export const ngrokUrl = ngrokfn();
+export const ngrokUrl = ngrokfn()

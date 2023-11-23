@@ -1,46 +1,49 @@
-import axios from "axios";
-import express from "express";
-import to from "await-to-js";
-import { Prisma, PrismaClient } from "@prisma/client";
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-extraneous-class */
+import axios from 'axios'
+import to from 'await-to-js'
+import { PrismaClient } from '@prisma/client'
 
-import { AuthSercice } from "./auth.service";
-import { timestampFn } from "../util";
-import { url, config } from "../config";
-import { ngrokUrl } from "../app";
+import { AuthSercice } from './auth.service'
+import { timestampFn } from '../util'
+import { url, config } from '../config'
+import { ngrokUrl } from '../app'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 interface stkData {
-  phoneNumber: string;
-  amount: number;
+  phoneNumber: string
+  amount: number
 }
 
-interface queryData {}
+// interface queryData {}
 
 export abstract class StkService {
-  static async pushStk(data: stkData): Promise<any> {
-    if (!data.phoneNumber || data.phoneNumber.length !== 10) throw new Error("Please provide a valid phone Number")
-    if (!data.amount || data.amount<1) throw new Error("Please provide a valid  amount")
-    const phoneNumber = data.phoneNumber.substring(1);
-    const amount = data.amount;
+  static async pushStk (data: stkData): Promise<any> {
+    if ((data.phoneNumber == null) || data.phoneNumber.length !== 10) throw new Error('Please provide a valid phone Number')
+    if ((data.amount == null) || data.amount < 1) throw new Error('Please provide a valid  amount')
+    const phoneNumber = data.phoneNumber.substring(1)
+    const amount = data.amount
 
-    const stkUrl = url.stkUrl!;
+    const stkUrl = url.stkUrl!
     // const CallBackURL = url.CallBackURL!;
-    const callBackUrI = await ngrokUrl;
-    console.log(`${callBackUrI}/callback`);
+    const callBackUrI = await ngrokUrl
+    console.log(`${callBackUrI}/callback`)
 
-    const shortCode = config.shortcode!;
-    const passKey = config.passkey!;
+    const shortCode = config.shortcode!
+    const passKey = config.passkey!
 
-    const timeStamp = timestampFn();
+    const timeStamp = timestampFn()
 
-    const buffer = Buffer.from(shortCode + passKey + timeStamp);
-    const password = buffer.toString("base64");
+    const buffer = Buffer.from(shortCode + passKey + timeStamp)
+    const password = buffer.toString('base64')
 
     // Token
-    const token = await AuthSercice.getAuth();
+    const token = await AuthSercice.getAuth()
 
-    const auth = `Bearer ${token}`;
+    const auth = `Bearer ${token}`
 
     let err, stkRes;
 
@@ -51,7 +54,7 @@ export abstract class StkService {
           BusinessShortCode: shortCode,
           Password: password,
           Timestamp: timeStamp,
-          TransactionType: "CustomerPayBillOnline",
+          TransactionType: 'CustomerPayBillOnline',
           Amount: amount,
           PartyA: `254${phoneNumber}`,
           PartyB: shortCode,
@@ -59,52 +62,51 @@ export abstract class StkService {
           CallBackURL: `${callBackUrI}/callback`,
           // CallBackURL: "https://5da3-197-232-145-163.eu.ngrok.io/callback",
           AccountReference: `254${phoneNumber}`,
-          TransactionDesc: "test",
+          TransactionDesc: 'test'
         },
         {
           headers: {
-            Authorization: auth,
-          },
+            Authorization: auth
+          }
         }
       )
-    );
+    )
 
     if (err) {
-      throw new Error(err.message);
+      throw new Error(err.message)
     }
 
-    let stkres = stkRes?.data;
-    const ResponseCode = stkres.ResponseCode;
+    const stkres = stkRes?.data
+    const ResponseCode = stkres.ResponseCode
 
-    if (ResponseCode === "0") {
+    if (ResponseCode === '0') {
       await prisma.stkRes.create({
         data: {
           merchantRequestID: stkres.MerchantRequestID,
           checkoutRequestID: stkres.CheckoutRequestID,
           responseDescription: stkres.ResponseDescription,
-          customerMessage: stkres.CustomerMessage,
-        },
-      });
+          customerMessage: stkres.CustomerMessage
+        }
+      })
     }
 
-
-    return stkres;
+    return stkres
   }
 
-  static async queryStk(CheckoutRequestID: string): Promise<any> {
-    const shortCode = config.shortcode!;
-    const passKey = config.passkey!;
-    const queryUrl = url.queryUrl!;
+  static async queryStk (CheckoutRequestID: string): Promise<any> {
+    const shortCode = config.shortcode!
+    const passKey = config.passkey!
+    const queryUrl = url.queryUrl!
 
-    const timeStamp = timestampFn();
+    const timeStamp = timestampFn()
 
-    const buffer = Buffer.from(shortCode + passKey + timeStamp);
-    const password = buffer.toString("base64");
+    const buffer = Buffer.from(shortCode + passKey + timeStamp)
+    const password = buffer.toString('base64')
 
     // Token
-    const token = await AuthSercice.getAuth();
+    const token = await AuthSercice.getAuth()
 
-    const auth = `Bearer ${token}`;
+    const auth = `Bearer ${token}`
     try {
       const queryReq = await axios.post(
         queryUrl,
@@ -112,20 +114,20 @@ export abstract class StkService {
           BusinessShortCode: shortCode,
           Password: password,
           Timestamp: timeStamp,
-          CheckoutRequestID: CheckoutRequestID,
+          CheckoutRequestID
         },
         {
           headers: {
-            Authorization: auth,
-          },
+            Authorization: auth
+          }
         }
-      );
+      )
 
-      const response = queryReq.data;
+      const response = queryReq.data
 
-      return response;
+      return response
     } catch (err: any) {
-      throw new Error(err.message);
+      throw new Error(err.message)
     }
   }
 }
