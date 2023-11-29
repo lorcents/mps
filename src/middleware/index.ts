@@ -32,7 +32,7 @@ export const errorLogger = (
   response: Response,
   next: NextFunction
 ) => {
-  const timestamp = new Date().toISOString()
+  const timestamp = new Date().toISOString().toLocaleString()
   console.error(`[${timestamp}] Error: ${error.message}`)
   if (process.env.NODE_ENV === 'development' && error.stack) {
     console.error(`[${timestamp}] Stack Trace: ${error.stack}`)
