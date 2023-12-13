@@ -16,7 +16,7 @@ export const controllers = {
 
   token: async (req: express.Request, res: express.Response, next: NextFunction): Promise<any> => {
     try {
-      const result = await AuthSercice.getAuth()
+      const result = await AuthSercice.getAccessToken()
       const token = result
       res.json(token)
     } catch (error) {

@@ -41,7 +41,7 @@ export abstract class StkService {
     const password = buffer.toString('base64')
 
     // Token
-    const token = await AuthSercice.getAuth()
+    const token = await AuthSercice.getAccessToken()
 
     const auth = `Bearer ${token}`
 
@@ -104,7 +104,7 @@ export abstract class StkService {
     const password = buffer.toString('base64')
 
     // Token
-    const token = await AuthSercice.getAuth()
+    const token = await AuthSercice.getAccessToken()
 
     const auth = `Bearer ${token}`
     try {
