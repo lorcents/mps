@@ -28,8 +28,6 @@ export const requestLogger = (
 // Error handling Middleware function for logging the error message
 export const errorLogger = (
   error: Error,
-  request: Request,
-  response: Response,
   next: NextFunction
 ) => {
   const timestamp = new Date().toISOString().toLocaleString()
@@ -44,7 +42,6 @@ export const errorLogger = (
 // and sends back a response in JSON format
 export const errorResponder = (
   error: AppError,
-  request: Request,
   response: Response,
   next: NextFunction) => {
   response.header('Content-Type', 'application/json')
@@ -62,7 +59,6 @@ export const errorResponder = (
 // Fallback Middleware function for returning
 // 404 error for undefined paths
 export const invalidPathHandler = (
-  request: Request,
   response: Response,
   next: NextFunction) => {
   response.status(404)
