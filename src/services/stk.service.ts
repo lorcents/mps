@@ -27,13 +27,13 @@ export abstract class StkService {
     const phoneNumber = data.phoneNumber.substring(1)
     const amount = data.amount
 
-    const stkUrl = url.stkUrl!
+    const stkUrl = url.stkUrl
     // const CallBackURL = url.CallBackURL!;
     const callBackUrI = await ngrokUrl
     console.log(`${callBackUrI}/callback`)
 
-    const shortCode = config.shortcode!
-    const passKey = config.passkey!
+    const shortCode = config.shortcode
+    const passKey = config.passkey
 
     const timeStamp = timestampFn()
 
@@ -94,9 +94,9 @@ export abstract class StkService {
   }
 
   static async queryStk (CheckoutRequestID: string): Promise<any> {
-    const shortCode = config.shortcode!
-    const passKey = config.passkey!
-    const queryUrl = url.queryUrl!
+    const shortCode = config.shortcode
+    const passKey = config.passkey
+    const queryUrl = url.queryUrl
 
     const timeStamp = timestampFn()
 

@@ -7,6 +7,7 @@ import cors from 'cors'
 
 import route from './routes'
 import { requestLogger, errorLogger, errorResponder, invalidPathHandler } from './middleware'
+import { config } from './config'
 dotenv.config()
 
 const app = express()
@@ -37,9 +38,13 @@ app.listen(port, () => {
 })
 
 const ngrokfn = async (): Promise<any> => {
-  const url = await ngrok.connect(+port)
-  console.log(`🚀 Ngrok ready at ${url}`)
-  return url
+  try {
+    const url = await ngrok.connect({ authtoken: config.ngrokAuthToken, addr: +port })
+    console.log(`🚀 Ngrok ready at ${url}`)
+    return url
+  } catch (err: any) {
+    console.log(err?.message)
+  }
 }
 
 export const ngrokUrl = ngrokfn()
