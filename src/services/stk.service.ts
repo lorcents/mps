@@ -157,7 +157,7 @@ export abstract class StkService {
         },
       });
     } catch (err: any) {
-      console.log(err.message);
+      throw new Error(err.message);
     }
 
     // Convert the response to a string
@@ -166,7 +166,7 @@ export abstract class StkService {
     // Write the response string to a file
     fs.appendFile("response.txt", responseString, (err) => {
       if (err) {
-        console.error(err);
+        throw new Error(err.message);
       } else {
         console.log("Response successfully written to file");
       }
