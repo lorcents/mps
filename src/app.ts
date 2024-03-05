@@ -4,6 +4,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import ngrok from 'ngrok'
 import cors from 'cors'
+import localtunnel from 'localtunnel'
 
 import route from './routes'
 import { requestLogger, errorLogger, errorResponder, invalidPathHandler } from './middleware'
@@ -39,8 +40,15 @@ app.listen(port, () => {
 
 const ngrokfn = async (): Promise<any> => {
   try {
-    const url = await ngrok.connect({ authtoken: config.ngrokAuthToken, addr: +port })
-    console.log(`🚀 Ngrok ready at ${url}`)
+    // const url = await ngrok.connect({ 
+    //   authtoken: config.ngrokAuthToken,
+    //   addr: +port,
+    //   configPath: "~/.config/ngrok/ngrok.yml"
+    // })
+    const tunnel = await localtunnel({ port: +port });
+    const url = tunnel.url;
+    console.log(`🚀 Local tunnel ready at ${url}`)
+      
     return url
   } catch (err: any) {
     console.log(err?.message)
