@@ -138,7 +138,7 @@ export abstract class StkService {
 
       const response = queryReq.data;
 
-      this.saveQuery(response)
+      this.saveQuery(response);
 
       return response;
     } catch (err: any) {
@@ -147,19 +147,18 @@ export abstract class StkService {
   }
 
   static async saveQuery(result: Result): Promise<any> {
-      try {
-        await prisma.callbackRes.create({
-          data: {
-            stkRes: { connect: { checkoutRequestID: result.CheckoutRequestID } },
-            resultCode: +result.ResultCode,
-            resultDesc: result.ResponseDescription,
-            mpesaReceiptNumber :result.MpesaReceiptNumber,
-          },
-        });
-      } catch (err: any) {
-        console.log(err.message);
-      }
-    
+    try {
+      await prisma.callbackRes.create({
+        data: {
+          stkRes: { connect: { checkoutRequestID: result.CheckoutRequestID } },
+          resultCode: +result.ResultCode,
+          resultDesc: result.ResponseDescription,
+          mpesaReceiptNumber: result.MpesaReceiptNumber,
+        },
+      });
+    } catch (err: any) {
+      console.log(err.message);
+    }
 
     // Convert the response to a string
     const responseString = JSON.stringify(result) + "\r\n";

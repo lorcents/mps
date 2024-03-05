@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { type Request, type Response, type NextFunction } from 'express'
+import { type Request, type Response, type NextFunction } from "express";
 
 // Error object used in error handling middleware function
 export class AppError extends Error {
-  statusCode: number
+  statusCode: number;
 
-  constructor (statusCode: number, message: string) {
-    super(message)
+  constructor(statusCode: number, message: string) {
+    super(message);
 
-    Object.setPrototypeOf(this, new.target.prototype)
-    this.name = Error.name
-    this.statusCode = statusCode
-    Error.captureStackTrace(this)
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = Error.name;
+    this.statusCode = statusCode;
+    Error.captureStackTrace(this);
   }
 }
 
@@ -20,10 +20,11 @@ export class AppError extends Error {
 export const requestLogger = (
   request: Request,
   response: Response,
-  next: NextFunction) => {
-  console.log(`${request.method} url:: ${request.url}`)
-  next()
-}
+  next: NextFunction
+) => {
+  console.log(`${request.method} url:: ${request.url}`);
+  next();
+};
 
 // Error handling Middleware function for logging the error message
 export const errorLogger = (
@@ -32,13 +33,13 @@ export const errorLogger = (
   response: Response,
   next: NextFunction
 ) => {
-  const timestamp = new Date().toISOString().toLocaleString()
-  console.error(`[${timestamp}] Error: ${error.message}`)
-  if (process.env.NODE_ENV === 'development' && error.stack) {
-    console.error(`[${timestamp}] Stack Trace: ${error.stack}`)
+  const timestamp = new Date().toISOString().toLocaleString();
+  console.error(`[${timestamp}] Error: ${error.message}`);
+  if (process.env.NODE_ENV === "development" && error.stack) {
+    console.error(`[${timestamp}] Stack Trace: ${error.stack}`);
   }
-  next(error) // Calling next middleware
-}
+  next(error); // Calling next middleware
+};
 
 // Error handling Middleware function reads the error message
 // and sends back a response in JSON format
@@ -46,30 +47,32 @@ export const errorResponder = (
   error: AppError,
   request: Request,
   response: Response,
-  next: NextFunction) => {
-  response.header('Content-Type', 'application/json')
+  next: NextFunction
+) => {
+  response.header("Content-Type", "application/json");
 
-  const status = error.statusCode || 400
-  const message = error.message || 'something went wrong'
+  const status = error.statusCode || 400;
+  const message = error.message || "something went wrong";
   response.status(status).json({
     error: {
       status,
-      message
-    }
-  })
-}
+      message,
+    },
+  });
+};
 
 // Fallback Middleware function for returning
 // 404 error for undefined paths
 export const invalidPathHandler = (
   request: Request,
   response: Response,
-  next: NextFunction) => {
-  response.status(404)
+  next: NextFunction
+) => {
+  response.status(404);
   response.send({
     error: {
       status: 404,
-      message: 'Invalid path'
-    }
-  })
-}
+      message: "Invalid path",
+    },
+  });
+};
